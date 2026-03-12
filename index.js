@@ -1,4 +1,5 @@
 import { dates } from '/utils/dates'
+import { GoogleGenerativeAI } from "@google/generative-ai"
 
 const tickersArr = []
 
@@ -41,7 +42,7 @@ async function fetchStockData() {
     loadingArea.style.display = 'flex'
     try {
         const stockData = await Promise.all(tickersArr.map(async (ticker) => {
-            const url = `https://api.polygon.io/v2/aggs/ticker/${ticker}/range/1/day/${dates.startDate}/${dates.endDate}?apiKey=${process.env.POLYGON_API_KEY}`
+            const url = `https://api.polygon.io/v2/aggs/ticker/${ticker}/range/1/day/${dates.startDate}/${dates.endDate}?apiKey=${import.meta.env.VITE_POLYGON_API_KEY}`
             const response = await fetch(url)
             const data = await response.text()
             const status = await response.status
@@ -60,14 +61,28 @@ async function fetchStockData() {
 }
 
 async function fetchReport(data) {
-    /** AI goes here **/
+    try {
+        const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+        const model = genAI.getGenerativeModel({
+            model: "gemini-2.5-flash",
+            systemInstruction: {
+                parts: [{ text: "You are a stock market expert. Your task is to analyze the provided stock data and advise the user on whether to buy or sell the shares. Keep the report concise and professional. Respond ONLY in pure HTML. Do not wrap the response in markdown code blocks like ```html. Use tags like <h3>, <p>, <strong>, and <br> to format the report beautifully." }],
+            },
+        });
+        const chat = model.startChat();
+        const result = await chat.sendMessage(data);
+        renderReport(result.response.text());
+    } catch(err) {
+        console.error('error: ', err);
+        renderReport('Unable to generate report. Please try again later.');
+    }
 }
 
 function renderReport(output) {
-    loadingArea.style.display = 'none'
-    const outputArea = document.querySelector('.output-panel')
-    const report = document.createElement('p')
-    outputArea.appendChild(report)
-    report.textContent = output
-    outputArea.style.display = 'flex'
+    loadingArea.style.display = 'none';
+    const outputArea = document.querySelector('.output-panel');
+    outputArea.innerHTML = output;
+    outputArea.style.display = 'flex';
+    outputArea.style.flexDirection = 'column';
+    outputArea.style.overflowY = 'auto'; // allow scrolling if text is too long
 }

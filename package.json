@@ -1,7 +1,9 @@
 {
   "name": "project",
+  "type": "module",
   "dependencies": {
-    "openai": "^6.25.0"
+    "@google/generative-ai": "^0.24.1",
+    "dotenv": "^17.3.1"
   },
   "devDependencies": {
     "vite": "latest"

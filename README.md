@@ -1,6 +1,6 @@
 # 📈 Dodgy Dave's Stock Predictions
 
-A fun, tongue-in-cheek stock prediction web app that fetches real market data from the [Polygon.io](https://polygon.io/) API and generates AI-powered "predictions" using OpenAI. Built with vanilla HTML, CSS, and JavaScript, bundled with [Vite](https://vitejs.dev/).
+A fun, tongue-in-cheek stock prediction web app that fetches real market data from the [Polygon.io](https://polygon.io/) API and generates AI-powered reports and recommendations using Google Gemini. Built with vanilla HTML, CSS, and JavaScript, bundled with [Vite](https://vitejs.dev/).
 
 > **Disclaimer:** This is **not** real financial advice — "Always correct 15% of the time!" 😜
 
@@ -12,7 +12,7 @@ A fun, tongue-in-cheek stock prediction web app that fetches real market data fr
 
 - **Stock Ticker Input** — Add up to 3 stock tickers (e.g. `MSFT`, `TSLA`, `AAPL`)
 - **Real Market Data** — Fetches recent daily aggregates from the Polygon.io REST API
-- **AI-Generated Reports** — Sends stock data to OpenAI for a humorous "analysis" *(integration placeholder)*
+- **AI-Generated Reports** — Sends stock data to Google Gemini for a professional analysis and buy/sell recommendation
 - **Loading States** — Visual feedback with an animated loader while data is fetched
 - **Responsive UI** — Clean layout with Google Fonts (Poppins, Comic Neue) and normalize.css
 
@@ -20,16 +20,12 @@ A fun, tongue-in-cheek stock prediction web app that fetches real market data fr
 
 ## 🗂️ Project Structure
 
-```
+```text
 stock-broker-advisor/
 ├── images/
 │   ├── add.svg              # Add-ticker button icon
 │   ├── loader.svg            # Loading spinner
 │   └── logo-dave-text.png    # Header logo
-├── open-ai-dependency/       # Scaffold for OpenAI integration
-│   ├── index.html
-│   ├── index.css
-│   └── index.js
 ├── utils/
 │   └── dates.js              # Date helpers (start/end date for API calls)
 ├── index.html                # Main entry point
@@ -49,7 +45,7 @@ stock-broker-advisor/
 
 - [Node.js](https://nodejs.org/) (v16+)
 - A [Polygon.io](https://polygon.io/) API key (free tier available)
-- An [OpenAI](https://platform.openai.com/) API key
+- A [Google Gemini](https://aistudio.google.com/apikey) API key
 
 ### Installation
 
@@ -71,8 +67,8 @@ stock-broker-advisor/
    Create a `.env` file in the project root (it's git-ignored by default):
 
    ```env
-   POLYGON_API_KEY=your_polygon_api_key_here
-   OPENAI_API_KEY=your_openai_api_key_here
+   VITE_POLYGON_API_KEY=your_polygon_api_key_here
+   VITE_GEMINI_API_KEY=your_gemini_api_key_here
    ```
 
 4. **Start the dev server**
@@ -100,8 +96,8 @@ stock-broker-advisor/
 
 1. **Enter tickers** — Type a stock ticker (≥ 3 characters) and click the ➕ button to add it. Up to 3 tickers are accepted.
 2. **Generate Report** — Click *Generate Report* to fetch daily aggregate data from Polygon.io for the last 3 days.
-3. **AI Report** — The fetched data is passed to an AI report generator (OpenAI integration placeholder in `fetchReport()`).
-4. **View Results** — The report is rendered in the output panel.
+3. **AI Report** — The fetched data is passed to the Google Gemini AI model (in `fetchReport()`) to generate an HTML-formatted analysis.
+4. **View Results** — The report is rendered beautifully in the output panel.
 
 ### Key Files
 
@@ -110,7 +106,7 @@ stock-broker-advisor/
 | `index.js` | Handles form input, API calls to Polygon.io, and report rendering |
 | `utils/dates.js` | Computes `startDate` (3 days ago) and `endDate` (yesterday) in `YYYY-MM-DD` format |
 | `index.html` | Semantic HTML structure with action, loading, and output panels |
-| `index.css` | Styling with Poppins + Comic Neue fonts, responsive panels |
+| `index.css` | Styling with Poppins + Comic Neue fonts, flexbox & responsive panels |
 
 ---
 
@@ -118,7 +114,7 @@ stock-broker-advisor/
 
 | Package | Purpose |
 | ------- | ------- |
-| **openai** | OpenAI SDK for generating AI reports |
+| **@google/generative-ai** | Google Gemini SDK for generating AI reports |
 | **vite** *(dev)* | Fast build tool and dev server |
 
 ---
